@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -26,6 +27,25 @@ func (h *BonusHandler) CreatePrivilegeHistoryHandler(w http.ResponseWriter, r *h
 
 	if err := h.BonusRepo.CreateHistoryRecord(&record); err != nil {
 		log.Printf("Failed to create ticket: %s", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *BonusHandler) UpdatePrivilegeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("DDDDDDDD")
+	var record models.Privilege
+
+	err := json.NewDecoder(r.Body).Decode(&record)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := h.BonusRepo.UpdatePrivilege(&record); err != nil {
+		log.Printf("Failed to update ticket: %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

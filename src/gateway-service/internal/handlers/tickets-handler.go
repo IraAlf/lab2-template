@@ -11,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-
-
 func (gs *GatewayService) GetUserTickets(w http.ResponseWriter, r *http.Request) {
 	username := r.Header.Get("X-User-Name")
 	if username == "" {
@@ -50,11 +48,14 @@ func (gs *GatewayService) CancelTicket(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	params := mux.Vars(r)
+	ticketUID := params["ticketUid"]
 
 	err := service.CalncelTicketController(
 		gs.Config.TicketServiceAddress,
 		gs.Config.BonusServiceAddress,
 		username,
+		ticketUID,
 	)
 
 	if err != nil {

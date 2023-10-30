@@ -38,6 +38,7 @@ func main() {
 
 	router.HandleFunc("/api/v1/bonus", handlers.CreatePrivilegeHistoryHandler).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/v1/bonus/privilege", handlers.CreatePrivilegeHandler).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/v1/bonus/{username}", handlers.UpdatePrivilegeHandler).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/v1/bonus/{username}", handlers.GetPrivilegeByUsernameHandler).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/v1/bonus/history/{privilegeId}", handlers.GetHistoryByIdHandler).Methods("GET", "OPTIONS")
 
