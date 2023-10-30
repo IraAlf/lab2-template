@@ -6,7 +6,34 @@ import (
 	"lab2/src/gateway-service/internal/models"
 )
 
-func CalncelTicketController(ticketServiceAddress, bonusServiceAddress, username string) error {
+func CalncelTicketController(ticketServiceAddress, bonusServiceAddress, username string, ticketUID string) error {
+	privilegeShortInfo, err := GetPrivilegeShortInfo(bonusServiceAddress, username)
+	if err != nil {
+		return nil
+	}
+
+	privilegeHistory, err := GetPrivilegeHistory(bonusServiceAddress, privilegeShortInfo.ID)
+	if err != nil {
+		return nil
+	}
+
+	privilegeInfo := &models.PrivilegeInfo{
+		Status:  privilegeShortInfo.Status,
+		Balance: privilegeShortInfo.Balance,
+		History: privilegeHistory,
+	}
+
+	for _, privilege := range *privilegeInfo.History {
+		fmt.Println(privilege.TicketUID, ticketUID)
+		if privilege.TicketUID == ticketUID {
+
+			if err := UpdatePrivilege(bonusServiceAddress, username, privilegeInfo.Balance-privilege.BalanceDiff); err != nil {
+				fmt.Println("AAAA")
+				return nil
+			}
+
+		}
+	}
 	return nil
 }
 

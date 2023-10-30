@@ -14,6 +14,7 @@ type Repository interface {
 	GetHistoryById(ticketUID string) ([]*models.PrivilegeHistory, error)
 	CreateHistoryRecord(*models.PrivilegeHistory) error
 	CreatePrivilege(*models.Privilege) error
+	UpdatePrivilege(*models.Privilege) error
 }
 
 type BonusRepository struct {
@@ -35,6 +36,17 @@ func (r *BonusRepository) CreateHistoryRecord(record *models.PrivilegeHistory) e
 		record.Date,
 		record.BalanceDiff,
 		record.OperationType,
+	)
+
+	return err
+}
+
+func (r *BonusRepository) UpdatePrivilege(record *models.Privilege) error {
+	fmt.Println("GGGGGGGGG")
+	_, err := r.db.Query(
+		`UPDATE  privilege set balance = $2 where username = $1;`,
+		record.Username,
+		record.Balance,
 	)
 
 	return err
